@@ -15,6 +15,12 @@ module Client
       end
     end
 
+    def fetch_pokemon_details(url)
+      api_call(url) do |body|
+        body
+      end
+    end
+
     def fetch_types
       api_call("#{BASE_URL}/#{TYPE_URL}?limit=#{LIMIT}") do |body|
         body.fetch('results')

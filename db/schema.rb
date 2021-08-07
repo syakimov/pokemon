@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_07_111749) do
+ActiveRecord::Schema.define(version: 2021_08_07_115410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,23 @@ ActiveRecord::Schema.define(version: 2021_08_07_111749) do
     t.index ["url"], name: "index_pokemon_sync_queues_on_url", unique: true
   end
 
+  create_table "pokemon_types", force: :cascade do |t|
+    t.bigint "pokemon_id"
+    t.bigint "type_id"
+    t.index ["pokemon_id"], name: "index_pokemon_types_on_pokemon_id"
+    t.index ["type_id"], name: "index_pokemon_types_on_type_id"
+  end
+
+  create_table "pokemons", force: :cascade do |t|
+    t.string "idx", null: false
+    t.string "name"
+    t.string "height"
+    t.string "weight"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["idx"], name: "index_pokemons_on_idx", unique: true
+  end
+
   create_table "types", force: :cascade do |t|
     t.string "idx", null: false
     t.string "name", null: false
@@ -30,4 +47,6 @@ ActiveRecord::Schema.define(version: 2021_08_07_111749) do
     t.index ["idx"], name: "index_types_on_idx", unique: true
   end
 
+  add_foreign_key "pokemon_types", "pokemons"
+  add_foreign_key "pokemon_types", "types"
 end

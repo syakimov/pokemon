@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Type < ApplicationRecord
+class Pokemon < ApplicationRecord
   has_many :pokemon_types, dependent: :destroy
-  has_many :pokemons, through: :pokemon_types
+  has_many :types, through: :pokemon_types
 end
