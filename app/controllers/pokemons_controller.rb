@@ -2,12 +2,11 @@
 
 class PokemonsController < ApplicationController
   def index
-    pokemons = Pokemon.includes(:types).limit(2)
-    data = pokemons.map do |pokemon|
+    data = Pokemon.includes(:types).map do |pokemon|
       { id: pokemon.id, name: pokemon.name, types: pokemon.types.map(&:name) }
     end
 
-    render json: data
+    paginate json: data
   end
 
   def show
