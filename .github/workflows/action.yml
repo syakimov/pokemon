@@ -1,0 +1,56 @@
+name: "Tests"
+on:
+  push:
+
+jobs:
+  rspec:
+    name: RSpec
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test
+      REDIS_URL: redis://localhost:6379/0
+      DISABLE_SPRING: true
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:latest
+        ports: ["6379:6379"]
+        options: --entrypoint redis-server
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Install postgres client
+        run: sudo apt-get install libpq-dev
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install --path vendor/bundle --jobs 4 --retry 3
+
+      - name: Create database
+        run: |
+          bundler exec rake db:setup
+
+      - name: Run tests
+        env:
+          RSPEC_PROFILE_EXAMPLES: 10
+        run: bundler exec rspec
