@@ -3,7 +3,7 @@
 class PokemonsController < ApplicationController
   def index
     data = Pokemon.includes(:types).map do |pokemon|
-      { idx: pokemon.idx, name: pokemon.name, types: pokemon.types.map(&:name) }
+      { idx: pokemon.idx, name: pokemon.name, types: pokemon.types.map(&:name), link: pokemon_url(pokemon.idx) }
     end
 
     paginate json: data
