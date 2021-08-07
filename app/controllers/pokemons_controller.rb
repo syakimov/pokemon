@@ -3,7 +3,7 @@
 class PokemonsController < ApplicationController
   def index
     data = Pokemon.includes(:types).map do |pokemon|
-      { id: pokemon.id, name: pokemon.name, types: pokemon.types.map(&:name) }
+      { idx: pokemon.idx, name: pokemon.name, types: pokemon.types.map(&:name) }
     end
 
     paginate json: data
@@ -20,6 +20,6 @@ class PokemonsController < ApplicationController
   private
 
   def pokemon
-    Pokemon.find(params[:id])
+    Pokemon.find_by(idx: params[:id])
   end
 end
