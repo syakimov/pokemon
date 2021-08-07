@@ -8,6 +8,6 @@ module QueuePokemons
       { url: data.fetch('url') }
     end
 
-    PokemonSyncQueue.upsert_all(queue_data, unique_by: :url)
+    PokemonSyncQueue.upsert_all(queue_data, unique_by: :url).count
   end
 end
